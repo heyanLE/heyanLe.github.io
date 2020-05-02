@@ -427,7 +427,7 @@ p2 &= p(i-1 , p)
 <h2 id="边界条件"><a href="#边界条件" class="headerlink" title="边界条件"></a>边界条件</h2><p>从国王开始，一个人去找两个人，然后继续找，继续找，那么是否存在有的人可以直接给出答案不用找别人的呢？</p>
 <p>答案肯定是有的，要不这个过程就没完没了了。其实也很容易想到，当被问到给你 $z$ 人和第一座金矿—— <code>金矿 0</code> ，你能给我多少金币的时候，我可以直接给出答案，我们可以写出这一种情况的表达式：</p>
 <script type="math/tex; mode=display">
-p(z ,0)=\begin{cases}
+p(0 ,z)=\begin{cases}
 0 & z<people(0) \\
 gold(0) & z\geqslant people(0)
 \end{cases}</script><p>可以理解为，这是这个函数中几个特殊的自变量取得值，它不需要再次调用自己，直接就可以给出答案，这在动态规划里称为边界条件，在代码中也经常作为 <strong>递归</strong> 的 <strong>出口条件</strong> 和 <strong>迭代</strong> 的 <strong>停止条件</strong> 。</p>

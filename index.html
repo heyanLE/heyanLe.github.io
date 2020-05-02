@@ -411,12 +411,12 @@
 </ul>
 <p>对于国王来说，国王拥有十座金矿和 $10000$ 人，而令左右护法的给出的答案为 $x$ 和 $y$。</p>
 <p>则有 ：</p>
-<p> $p(9 ,10000) = max{x + 8888 ,y}$。</p>
+<p> $\begin{aligned}p(9 ,10000) = max{x + 8888 ,y}\end{aligned}$。</p>
 <p>对于左部下来说，他拥有九座金矿和 $8500$ 人，假设左部下命令的两个人给出的答案分别为 $a$ 和 $b$ 。</p>
-<p>则 $x = p(9 ,8500) = max{a + gold(9) ,b}$。</p>
-<p>同理 $y = p(9 ,10000) = max{c + gold(9) ,d}$ 。</p>
+<p>则 $\begin{aligned}x = p(9 ,8500) = max{a + gold(9) ,b}\end{aligned}$。</p>
+<p>同理 $\begin{aligned}y = p(9 ,10000) = max{c + gold(9) ,d}\end{aligned}$ 。</p>
 <p>将 $x$ ，$y$带回国王的算式中：  </p>
-<p>有 $p(9 ,10000) = max{p(9 ,8500) + 8888 ,p(9 ,10000)}$。</p>
+<p>有 $\begin{aligned}p(9 ,10000) = max{p(9 ,8500) + 8888 ,p(9 ,10000)}\end{aligned}$。</p>
 <p>然后，我们可以写出 $a$，$b$，$c$，$d$ 的表达式，带回到左右部下的表达式中，并以此类推，我们可以整理出关于这个函数的一般情况：</p>
 <script type="math/tex; mode=display">
 \begin{aligned}

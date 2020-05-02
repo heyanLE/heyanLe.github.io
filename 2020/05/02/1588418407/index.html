@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.jpg?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.jpg?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.jpg?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="小故事,动态规划," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="这是我在其他博客上看到的一个关于动态规划的小故事，觉得很形象地解释了动态规划是如何工作的，觉得有必要分享一下。 这篇文章只是通过一个小故事，让你对 动态规划 这个算法有一点更感性的认识，当然如果这提起了你学习的兴致，那再好不过了。直接上故事把。 原帖地址 转载有删减，如侵删。 背景有一个国家，全部的国民都很老实憨厚，某天他们在自己的国家发现了十座金矿，而且这十座金矿在地图上排成一条直线，国王知道这">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于动态规划 Part 1 - 通过一个小故事来初步了解">
+<meta property="og:url" content="http://yoursite.com/2020/05/02/1588418407/index.html">
+<meta property="og:site_name" content="何言的杂货店">
+<meta property="og:description" content="这是我在其他博客上看到的一个关于动态规划的小故事，觉得很形象地解释了动态规划是如何工作的，觉得有必要分享一下。 这篇文章只是通过一个小故事，让你对 动态规划 这个算法有一点更感性的认识，当然如果这提起了你学习的兴致，那再好不过了。直接上故事把。 原帖地址 转载有删减，如侵删。 背景有一个国家，全部的国民都很老实憨厚，某天他们在自己的国家发现了十座金矿，而且这十座金矿在地图上排成一条直线，国王知道这">
+<meta property="article:published_time" content="2020-05-02T11:20:06.000Z">
+<meta property="article:modified_time" content="2020-05-02T13:39:51.630Z">
+<meta property="article:author" content="何言">
+<meta property="article:tag" content="小故事">
+<meta property="article:tag" content="动态规划">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/05/02/1588418407/"/>
+
+
+
+
+
+  <title>关于动态规划 Part 1 - 通过一个小故事来初步了解 | 何言的杂货店</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">何言的杂货店</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-友联">
+          <a href="/link/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heart"></i> <br />
+            
+            友联
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/02/1588418407/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="何言">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="何言的杂货店">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">关于动态规划 Part 1 - 通过一个小故事来初步了解</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-02T19:20:06+08:00">
+                2020-05-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这是我在其他博客上看到的一个关于动态规划的小故事，觉得很形象地解释了动态规划是如何工作的，觉得有必要分享一下。</p>
+<p>这篇文章只是通过一个小故事，让你对 <strong>动态规划</strong> 这个算法有一点更感性的认识，当然如果这提起了你学习的兴致，那再好不过了。直接上故事把。</p>
+<p><a href="https://www.cnblogs.com/sdjl/articles/1274312.html" target="_blank" rel="noopener">原帖地址</a></p>
+<p>转载有删减，如侵删。</p>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>有一个国家，全部的国民都很老实憨厚，某天他们在自己的国家发现了十座金矿，而且这十座金矿在地图上排成一条直线，国王知道这个消息后很高兴，他希望可以把这些金子都挖出来造福国民，首先他把这些金矿依照在地图上的位置从西至东进行编号，依次为0、1、2、3、4、5、6、7、8、9，然后他命令他的手下去对每一座金矿进行勘測，以便知道挖取每一座金矿须要多少人力以及每座金矿可以挖出多少金子，然后动员国民都来挖金子。</p>
+<h2 id="规则"><a href="#规则" class="headerlink" title="规则"></a>规则</h2><p>开采金矿具有以下规则：</p>
+<ol>
+<li>挖每一座金矿须要的人数是 <strong>固定</strong> 的，多一个人少一个人都不行。国王知道每一个金矿各须要多少人手，<code>金矿 i</code> 需要的人数为 <code>people(i)</code> 。</li>
+<li>每一座金矿所挖出来的金子数是固定的，如果 <code>金矿 i</code> 有 <code>people(i)</code> 人去挖，就一定能恰好挖出 <code>gold(i)</code> 个金子</li>
+<li>国王在全国范围内仅招募到了<code>10000</code> 名愿意为了国家去挖金子的人，因此这些人可能不够把所有的金子都挖出来，但是国王希望挖到的金子越多越好。</li>
+<li>国王只想要知道最多可以挖出多少金子，而不关心哪些金矿挖哪些金矿不挖。</li>
+</ol>
+<h2 id="故事-Part-1"><a href="#故事-Part-1" class="headerlink" title="故事 Part 1"></a>故事 Part 1</h2><p>那么国王是如何思考这个问题的呢？他来到了 <code>金矿 9</code>，他的臣子告诉他，如果要挖 <code>金矿 9</code> 的话就需要 <code>1500</code> 个人，然后可以挖出 <code>8888</code> 个金子，即 <code>people(9) = 1500</code> ， <code>gold(9) = 8888</code>。  </p>
+<p>听到这里国王哈哈大笑起来，国王已经知道总共最多能挖出多少金子了，国王是如何在不了解其它金矿的情况下知道最多能挖出多少金子的呢？  </p>
+<p>他的臣子们也不知道这个谜，因此他的臣子们就问他了：『 最聪明的国王陛下，我们都没有告诉您其它金矿的情况，您是如何知道最终答案的呢？ 』  </p>
+<p>得意的国王笑了笑，然后把他最得意的左右手叫到跟前，说到：『我并不需要考虑最终要挖哪些金矿才能得到最多的金子，我只需要考虑我面前的这座金矿就可以了，对于我面前的这座金矿不外乎仅有两种选择，要么挖，要么不挖，对吧？』</p>
+<p>『 当然，当然 』大臣们回答到。</p>
+<p>国王继续说道：『 如果我挖取 <code>金矿 9</code> 的话那么我现在就能获得 <code>8888</code> 个金子，而我将用去 <code>1500</code> 个人，那么我还剩下 <code>8500</code>个人。我亲爱的左部下，如果你告诉我当我把所有剩下的 <code>8500</code>个人和所有剩下的其它金矿都交给你去开采你最多能给我挖出多少金子的话，那么我不就知道了在 <code>金矿 9</code> 一定开采的情况下所能得到的最大金币数吗？』</p>
+<p>国王的左部下听后回答道：『国王陛下，您的意思是如果我能用 <code>8500</code> 个人在其它金矿最多开采出 <code>x</code> 个金币的话，那您一共就能够获得 <code>x + 8888</code> 个金子，对吗？』</p>
+<p>『 是啊，是啊，如果第9座金矿一定开采的话。』大臣们点头说到。</p>
+<p> 国王笑着继续对着他的右部下说到：『 亲爱的右部下，也许我并不打算开采这 <code>金矿 9</code>，那么我依然拥有 <code>10000</code> 个人，如果我把这 <code>10000</code> 个人和剩下的金矿都给你的话，你最多能给我挖出多少个金子呢？』</p>
+<p>国王的右部下聪明地说道：『 尊敬的国王陛下，我明白您的意思了，如果我回答最多能购开采出 <code>y</code> 个金币的话，那您就可以在 <code>y</code> 和 <code>x+8888</code> 之间选择一个较大者，而这个较大者就是最终我们能获得的最大金币数，您看我这样理解对吗？』</p>
+<p>国王笑得更灿烂了，问他的左部下：『 那么亲爱的左部下，我给你 <code>8500</code> 个人和其余金矿的话你能告诉我最多能挖出多少金子吗？』</p>
+<p>『 请您放心，这个问题难不倒我. 』左部下向国王打包票说到。</p>
+<p> 国王高兴地继续问他的右部下：『 那右部下你呢，如果我给你 <code>10000</code> 个人和其余金矿的话你能告诉我最多能挖出多少金子吗？』</p>
+<p>『 当然能了！交给我吧！』右部下同左部下一样自信地回答道。</p>
+<p>『 那就拜托给你们两位了，现在我要回到我那舒适的王宫里去享受了，我期待着你们的答复。』国王说完就开始动身回去等消息了。  </p>
+<p>他是多么地相信他的两个大臣能够给他一个准确的答复，因为国王其实知道他的两位大臣要比他聪明得多。</p>
+<p>故事发展到这里，相信你很快就能想到接下来左右部下要怎么做了。  </p>
+<p>第二天，左右部下来到了 <code>金矿 8</code> ，得知 <code>金矿 8</code> 需要 <code>2000</code> 人，并最终可以挖出 <code>13000</code> 个金币。此时，左右部下的心中已经知道各自的答案了。</p>
+<p>对于左部下来说，国王给了它 <code>8500</code> 人和剩下九座金矿，他需要知道最多能挖出多少金子。</p>
+<p>左部下叫来两个人，对其中一个人说：『 如果我给你 <code>6500</code> 人和剩下的八座金矿，你最多能给我挖出多少金子？』</p>
+<p>对另一个人说：『 如果我给你 <code>8500</code> 人和剩下的八座金矿，你最多能给我挖出多少金子？』</p>
+<p>『 交给我们。』两个人马上就去执行他们的任务。</p>
+<p>『 如果他们两个都能回答我的问题，那么国王给我的问题不就解决了吗？』左部下如是想到。</p>
+<p>此时，右部下也喊来两个人，问着一模一样只有数字不同的问题。</p>
+<p>安排好后，两位部下相视一笑，『 我们的国王真是太聪明了 』</p>
+<p>……</p>
+<h2 id="递推公式"><a href="#递推公式" class="headerlink" title="递推公式"></a>递推公式</h2><p>故事听到这里先放一段落，让我们来好好感受一下国王的聪明之处，这也是动态规划的核心思想。  </p>
+<p>对于国王来说，它不需要思考十座金矿，它只需要等到左右部下的答案，然后简单的加减比较就能得出结果。  </p>
+<p>对于左右部下呢？他们也分别在等待两个人的结果，而最终这四个人会来到 <code>金矿 7</code>，继续分发他们的任务 ……</p>
+<p>现在我们来构造一个函数：</p>
+<p>$profit = p(i ,p)$：</p>
+<ul>
+<li>自变量 $i$ 表示前 $i+1$ 座金矿，如果 $i=9$ 则表示所有的十座金矿，如果 $i=8$ 则表示左右部下要思考的九座金矿。</li>
+<li>自变量 $p$ 表示你拥有的人数，比如对于国王来说，有 $10000$ 个人，则 $p=10000$ 。</li>
+<li>因变量 $profit$ 表示有 $i+1$ 座金矿和 $p$ 人的状况下最多能挖出多少金子。</li>
+</ul>
+<p>对于国王来说，国王拥有十座金矿和 $10000$ 人，而令左右护法的给出的答案为 $x$ 和 $y$。</p>
+<p>则有 ：</p>
+<p> $p(9 ,10000) = max{x + 8888 ,y}$。</p>
+<p>对于左部下来说，他拥有九座金矿和 $8500$ 人，假设左部下命令的两个人给出的答案分别为 $a$ 和 $b$ 。</p>
+<p>则 $x = p(9 ,8500) = max{a + gold(9) ,b}$。</p>
+<p>同理 $y = p(9 ,10000) = max{c + gold(9) ,d}$ 。</p>
+<p>将 $x$ ，$y$带回国王的算式中：  </p>
+<p>有 $p(9 ,10000) = max{p(9 ,8500) + 8888 ,p(9 ,10000)}$。</p>
+<p>然后，我们可以写出 $a$，$b$，$c$，$d$ 的表达式，带回到左右部下的表达式中，并以此类推，我们可以整理出关于这个函数的一般情况：</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+p(i ,p)& = max\{ p1 + gold(i) , p2\} \\
+p1 &= p(i-1 ,p- people(i)) \\
+p2 &= p(i-1 , p)
+\end{aligned}</script><p>这就是这个函数的一个递推公式，国王的问题，可以一分为二，最终二分为四 ……</p>
+<h2 id="边界条件"><a href="#边界条件" class="headerlink" title="边界条件"></a>边界条件</h2><p>从国王开始，一个人去找两个人，然后继续找，继续找，那么是否存在有的人可以直接给出答案不用找别人的呢？</p>
+<p>答案肯定是有的，要不这个过程就没完没了了。其实也很容易想到，当被问到给你 $z$ 人和第一座金矿—— <code>金矿 0</code> ，你能给我多少金币的时候，我可以直接给出答案，我们可以写出这一种情况的表达式：</p>
+<script type="math/tex; mode=display">
+p(z ,0)=\begin{cases}
+0 & z<people(0) \\
+gold(0) & z\geqslant people(0)
+\end{cases}</script><p>可以理解为，这是这个函数中几个特殊的自变量取得值，它不需要再次调用自己，直接就可以给出答案，这在动态规划里称为边界条件，在代码中也经常作为 <strong>递归</strong> 的 <strong>出口条件</strong> 和 <strong>迭代</strong> 的 <strong>停止条件</strong> 。</p>
+<h2 id="目标函数"><a href="#目标函数" class="headerlink" title="目标函数"></a>目标函数</h2><p>将递推公式和边界条件合为一体，形成的一个函数，称为目标函数。在边界条件和递推公式的共同作用下，这个函数所有自变量的取值我们都能求出来。</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+p(z ,i) & =\begin{cases}
+0 & i=0 , z<people(0) \\
+gold(0) & i=0 , z\geqslant people(0) \\
+max\{ p1 + gold(i) , p2\} & i > 0
+\end{cases} \\
+p1 &= p(i-1 ,p- people(i)) \\
+p2 &= p(i-1 , p)
+\end{aligned}</script><h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>至此，这个故事 Part 1 就分析完毕了，关于更加详细的动态规划的内容，别担心，将在 Part 2 为你们分享 <strong>动态规划</strong> 这个算法的具体内容包括代码实现。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E5%B0%8F%E6%95%85%E4%BA%8B/" rel="tag"># 小故事</a>
+          
+            <a href="/tags/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" rel="tag"># 动态规划</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/01/1588334385/" rel="next" title="LeetCode 面试题 64.求1+2+…+n">
+                <i class="fa fa-chevron-left"></i> LeetCode 面试题 64.求1+2+…+n
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="何言" />
+            
+              <p class="site-author-name" itemprop="name">何言</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#规则"><span class="nav-number">2.</span> <span class="nav-text">规则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#故事-Part-1"><span class="nav-number">3.</span> <span class="nav-text">故事 Part 1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#递推公式"><span class="nav-number">4.</span> <span class="nav-text">递推公式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#边界条件"><span class="nav-number">5.</span> <span class="nav-text">边界条件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#目标函数"><span class="nav-number">6.</span> <span class="nav-text">目标函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后记"><span class="nav-number">7.</span> <span class="nav-text">后记</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">何言</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

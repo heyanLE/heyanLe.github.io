@@ -85,12 +85,14 @@
 <meta property="og:url" content="http://heyanle.com/2020/05/14/1589461767/index.html">
 <meta property="og:site_name" content="何言的杂货店">
 <meta property="og:description" content="今天的力扣每日一题，因为位运算是我的短板之一，这题我没解出来，最终看了题解，不得不说妙啊，记录一下。 题目描述 136. 只出现一次的数字    给定一个 非空 整数数组，除了某个元素只出现一次以外，其余每个元素均出现两次。找出那个只出现了一次的元素。  难度：简单   说明你的算法应该具有线性时间复杂度。 你可以不使用额外空间来实现吗？ 示例 112输入: [2,2,1]输出: 1 示例 212">
+<meta property="og:image" content="http://heyanle.com/2020/05/14/1589461767/1.png">
 <meta property="article:published_time" content="2020-05-14T13:09:26.000Z">
-<meta property="article:modified_time" content="2020-05-14T14:24:50.010Z">
+<meta property="article:modified_time" content="2020-05-14T14:28:31.386Z">
 <meta property="article:author" content="何言">
 <meta property="article:tag" content="C++">
 <meta property="article:tag" content="位运算">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://heyanle.com/2020/05/14/1589461767/1.png">
 
 
 
@@ -392,7 +394,7 @@
 <li>语言：C++</li>
 </ul>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">singleNumber</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> ret = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">auto</span> e: nums) ret ^= e;</span><br><span class="line">        <span class="keyword">return</span> ret;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<h3 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h3><img class="[1] 1.png">
+<h3 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h3><img src="/2020/05/14/1589461767/1.png" class="[1]">
 <p>我感觉这个用时有点不正常，不过看了下更快速的提交代码，都是一样的啊，估计是电脑问题吧。</p>
 
       

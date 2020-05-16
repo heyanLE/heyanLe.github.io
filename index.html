@@ -268,6 +268,212 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://heyanle.com/2020/05/16/1589639914/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="何言">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="何言的杂货店">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/05/16/1589639914/" itemprop="url">关于递归的写法 - 假设法</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-16T22:39:18+08:00">
+                2020-05-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95/" itemprop="url" rel="index">
+                    <span itemprop="name">算法</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>今日的 LeetCode 每日一题是 <a href="https://leetcode-cn.com/problems/reverse-nodes-in-k-group/" target="_blank" rel="noopener">25. K 个一组翻转链表</a><br>看完题解之后关闭题解自己写的，算我通过了吧（算法这种东西重在积累经验，是不是自己写的问题不大）。<br>有时间我再整理吧。主要是突然想介绍一下我自己对 <strong>递归</strong> 的理解。</p>
+<p>本篇所有代码语言都为 C++；</p>
+<h2 id="递归"><a href="#递归" class="headerlink" title="递归"></a>递归</h2><p>其实递归说简单也挺简单的。很好理解，就是套娃，自己调用自己。<br>递归有几个部分组成：</p>
+<ul>
+<li>出口条件</li>
+<li>递</li>
+<li>归</li>
+</ul>
+<p>这里 <strong>出口条件</strong> 是一定要有的，也是专业术语。否则递归将会陷入死循环。<br>而 <strong>递</strong> 和 <strong>归</strong> 是我自己加入的，不知道有没有这种专业术语。  </p>
+<p>具体如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">recursion</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>( <span class="comment">/*出口条件*/</span> )&#123;</span><br><span class="line">        <span class="keyword">return</span>; <span class="comment">// 出口，如果有返回值就为出口值；</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 递 操作*/</span></span><br><span class="line"></span><br><span class="line">    recursion(); <span class="comment">//出口条件之后到最后一个递归调用之间的操作都为 递 操作</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 归 操作*/</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>形象一点，想象成一条线向下穿过一个一个方块，达到 <strong>出口条件</strong> 后再旋转一下从下到上回到第一个，<strong>递 操作</strong> 就是向下时候要做的操作，<strong>归 操作</strong> 就是向上回去的时候要做的操作。</p>
+<p>其中，按照 <strong>归 操作</strong> 的有无，递归可以分为 <strong>尾递归</strong> 和 <strong>非尾递归</strong>。</p>
+<h2 id="尾递归"><a href="#尾递归" class="headerlink" title="尾递归"></a>尾递归</h2><p>尾递归就是这个方法最后一行调用自己，即没有 <strong>归 操作</strong> 。</p>
+<p>这里以斐波那契数列举例子：  </p>
+<p>斐波那契数列具有以下特点：  </p>
+<ul>
+<li>前两个数字为 1</li>
+<li>后面所有数字为前面两个数字之和</li>
+</ul>
+<p>我们可以写一个方法来输出该数列的第 n 个数（ n 从 0 开始 ）；</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 斐波那契递归</span></span><br><span class="line"><span class="comment"> */</span> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">fun</span><span class="params">(<span class="keyword">int</span> n)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(n &lt;= <span class="number">1</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> fun(n<span class="number">-2</span>) + fun(n<span class="number">-1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这就是一个典型的尾递归，所有的尾递归都可以使用迭代来优化，比如对于以上方法使用迭代来实现就是：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 斐波那契迭代</span></span><br><span class="line"><span class="comment"> */</span> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">fun</span><span class="params">(<span class="keyword">int</span> n)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> db[n];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; n ; i ++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(i &lt;= <span class="number">1</span>)&#123;</span><br><span class="line">            db[i] = <span class="number">1</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            db[i] = db[i<span class="number">-2</span>] + db[i<span class="number">-1</span>];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> db[n];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>开一个数组来保存之前的斐波那契数。<br>再多 BB 一点，如果你写 <strong>动态规划</strong> 的目标函数确定为一元的时候，经常也是这种迭代的形势，db 也是约定俗成的一种写法。</p>
+<h2 id="假设法"><a href="#假设法" class="headerlink" title="假设法"></a>假设法</h2><p>对于 <strong>非尾递归</strong> 的话就要详细说一下了，我们在打题的时候，遇到的往往也是 <strong>非尾递归</strong> 。<br>关于 <strong>非尾递归</strong>，很多人都不清楚递归要如何入手，这里我以一道题为例子讲一下我写非尾递归时候的方法：</p>
+<ul>
+<li>题目： <a href="https://leetcode-cn.com/problems/reverse-linked-list/" target="_blank" rel="noopener">206. 反转链表</a></li>
+<li>题目要求递归和迭代两种实现方式，这里我只介绍递归。</li>
+</ul>
+<p>以下是我的思考过程：</p>
+<ol>
+<li>明确要用递归。</li>
+<li>明确递归方法的效果：将参数结点之后所有链表都反转并返回新的头节点。</li>
+<li>明确递归方向，即递归方法中调用下一次递归时候传入的参数为当前链表的下一个。</li>
+</ol>
+<p>一般明确这三点之后我们就可以开始写了：</p>
+<p>方法模型：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">ListNode* <span class="title">reverseList</span><span class="params">(ListNode* head)</span> </span>&#123;</span><br><span class="line">        </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="出口条件"><a href="#出口条件" class="headerlink" title="出口条件"></a>出口条件</h3><p>出口条件也可以分为两个思考过程：</p>
+<p>出口条件的思考主要要考虑之前我们明确的这个递归方法要实现的效果，即输入什么，输出什么。</p>
+<ol>
+<li>外部调用时候的出口条件：比如打题的时候系统直接第一次就给你传入一个 <code>null</code> 。当然有些题目中 <code>0</code> 啊之类的，要具体分析。本题中这部分只需要考虑它直接给你 <code>null</code> ， 那么我们直接返回一个 <code>null</code> 给它。</li>
+<li>递归过程的出口条件：这里已经假设它给的结点不可能为 <code>null</code> ，则本题中递归过程的出口条件也很容易想到，即结点该结点恰好就是最后一个，则根据之前讲的方法的效果，要返回这一个结点反转后的新头结点，即自己。</li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(!head || !(head-&gt;next))&#123;</span><br><span class="line">    <span class="keyword">return</span> head;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="假设成立"><a href="#假设成立" class="headerlink" title="假设成立"></a>假设成立</h3><p>我们可以先把递归调用写出来并用一个变量承接返回值。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> *newHead = reverseList(head-&gt;next);</span><br></pre></td></tr></table></figure>
+<p>考虑一下这个 <code>newHead</code> 是什么，回到我们刚刚讲的明确这个方法的效果， <code>reverseList(node)</code> 方法的效果是将 <code>node</code> 及之后的整条链表反转然后返回新的表头。  </p>
+<p>虽然我们还没写好这个方法，但是在方法里面，我们可以假设我们已经写完了，它是正常工作的，所以这里的 <code>newHead</code> 是除了第一个结点外后面所有结点都反转好的头节点。  </p>
+<p>我们的目的是要反转整个链表，然后现在除了第一个之后都反转好了，那么我们接下来只需将第一个接到后面所有反转好的链表后面，然后把这一个下一个置空就可以了。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> *newHead = reverseList(head-&gt;next);</span><br><span class="line">head-&gt;next = <span class="literal">nullptr</span>; <span class="comment">//将第一个结点后一个置空</span></span><br><span class="line">last-&gt;next = head; <span class="comment">//将第一个节点接在最后面</span></span><br></pre></td></tr></table></figure>
+<p>写到这里，我们发现 <code>last</code> 还是为止的。想一下我们要怎么拿到 <code>last</code> ，其实也不难想到，我们递归之后后面的所有链表都反转了，所以最初的第一个链表下一个反转后也就是最后一个，所以我们在 <strong>递操作</strong> 的时候就保存一下这个结点。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> *last = head-&gt;next; <span class="comment">//先保存递归反转的第一个即反转后最后一个</span></span><br><span class="line"><span class="keyword">auto</span> *newHead = reverseList(head-&gt;next);</span><br><span class="line">head-&gt;next = <span class="literal">nullptr</span>; <span class="comment">//将第一个结点后一个置空</span></span><br><span class="line">last-&gt;next = head; <span class="comment">//将第一个节点接在最后面</span></span><br></pre></td></tr></table></figure>
+<p>大功告成，最后返回反转后的结点头，即返回的 <code>newHead</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> *last = head-&gt;next; <span class="comment">//先保存递归反转的第一个即反转后最后一个</span></span><br><span class="line"><span class="keyword">auto</span> *newHead = reverseList(head-&gt;next);</span><br><span class="line">head-&gt;next = <span class="literal">nullptr</span>; <span class="comment">//将第一个结点后一个置空</span></span><br><span class="line">last-&gt;next = head; <span class="comment">//将第一个节点接在最后面</span></span><br><span class="line"><span class="keyword">return</span> newHead;</span><br></pre></td></tr></table></figure>
+<p>完整代码</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">ListNode* <span class="title">reverseList</span><span class="params">(ListNode* head)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(!head || !(head-&gt;next))&#123;</span><br><span class="line">        <span class="keyword">return</span> head;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">auto</span> *last = head-&gt;next; <span class="comment">//先保存递归反转的第一个即反转后最后一个</span></span><br><span class="line">    <span class="keyword">auto</span> *newHead = reverseList(head-&gt;next);</span><br><span class="line">    head-&gt;next = <span class="literal">nullptr</span>; <span class="comment">//将第一个结点后一个置空</span></span><br><span class="line">    last-&gt;next = head; <span class="comment">//将第一个节点接在最后面</span></span><br><span class="line">    <span class="keyword">return</span> newHead;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>大功告成。</p>
+<p>动图说明：</p>
+<img src="/2020/05/16/1589639914/1.gif" class="[1]">
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>整个过程中，核心就是假设法，假设我们已经写好了这个方法并且可以起作用，然后再补充  <strong>递 操作</strong> 和 <strong>归 操作</strong> 。</p>
+<p>有很多递归操作都是这样的，比如 <strong>归并排序</strong> 的写法，如果你能用假设法，那么你很快就能理解它为什么要怎么写，为什么能这样写。  </p>
+<p>其次，假设法的思想也可以用于 <strong>动态规划</strong> ，只不过 <strong>动态规划</strong> 抽象出了了 <strong>递推公式</strong> 这种东西，比较接近解数学题把，但是假设法写递归更偏向于解决实际情景。  </p>
+<p>身为 一鸽子 ，<strong>动态规划</strong> 的 Part 2 有空再来更新。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://heyanle.com/2020/05/14/1589461767/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1555,7 +1761,7 @@ p2 &= p(i-1 , p)
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

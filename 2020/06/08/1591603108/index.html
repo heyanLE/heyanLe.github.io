@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="今日的每日一题是  990. 等式方程的可满足性    因为最近的题都和离散数学有关，一看到题我就想起了最近学的离散数学中的恒等关系，于是想有么有一种可以表示 A 上的一个恒等闭包的数据结构。经过百度之后，我找到了并查集这种数据结构，感觉可以实现一个恒等闭包，特此记录下来。 并查集属于第三级的数据结构 —— 这是我自己想的数据结构分级：  一级数据结构为树，链表和数组，这种是各种代码原生就可以实现">
+<meta name="description" content="今日的每日一题是  990. 等式方程的可满足性    因为最近的题都和离散数学有关，一看到题我就想起了最近学的离散数学中的等价关系，于是想有么有一种可以表示 A 上的一个等价闭包的数据结构。经过百度之后，我找到了并查集这种数据结构，感觉可以实现一个等价闭包，特此记录下来。 并查集属于第三级的数据结构 —— 这是我自己想的数据结构分级：  一级数据结构为树，链表和数组，这种是各种代码原生就可以实现">
 <meta property="og:type" content="article">
-<meta property="og:title" content="关于 并查集 - 代码中的恒等关系">
+<meta property="og:title" content="关于 并查集 - 代码中的等价关系">
 <meta property="og:url" content="http://heyanle.com/2020/06/08/1591603108/index.html">
 <meta property="og:site_name" content="何言的杂货店">
-<meta property="og:description" content="今日的每日一题是  990. 等式方程的可满足性    因为最近的题都和离散数学有关，一看到题我就想起了最近学的离散数学中的恒等关系，于是想有么有一种可以表示 A 上的一个恒等闭包的数据结构。经过百度之后，我找到了并查集这种数据结构，感觉可以实现一个恒等闭包，特此记录下来。 并查集属于第三级的数据结构 —— 这是我自己想的数据结构分级：  一级数据结构为树，链表和数组，这种是各种代码原生就可以实现">
+<meta property="og:description" content="今日的每日一题是  990. 等式方程的可满足性    因为最近的题都和离散数学有关，一看到题我就想起了最近学的离散数学中的等价关系，于是想有么有一种可以表示 A 上的一个等价闭包的数据结构。经过百度之后，我找到了并查集这种数据结构，感觉可以实现一个等价闭包，特此记录下来。 并查集属于第三级的数据结构 —— 这是我自己想的数据结构分级：  一级数据结构为树，链表和数组，这种是各种代码原生就可以实现">
 <meta property="og:image" content="http://heyanle.com/2020/06/08/1591603108/1.png">
 <meta property="og:image" content="http://heyanle.com/2020/06/08/1591603108/2.png">
 <meta property="og:image" content="http://heyanle.com/2020/06/08/1591603108/3.png">
 <meta property="article:published_time" content="2020-06-08T07:58:27.000Z">
-<meta property="article:modified_time" content="2020-06-08T09:05:36.982Z">
+<meta property="article:modified_time" content="2020-06-17T07:51:35.411Z">
 <meta property="article:author" content="何言">
 <meta property="article:tag" content="并查集">
 <meta property="article:tag" content="数据结构">
@@ -130,7 +130,7 @@
 
 
 
-  <title>关于 并查集 - 代码中的恒等关系 | 何言的杂货店</title>
+  <title>关于 并查集 - 代码中的等价关系 | 何言的杂货店</title>
   
 
 
@@ -294,7 +294,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">关于 并查集 - 代码中的恒等关系</h1>
+          <h1 class="post-title" itemprop="name headline">关于 并查集 - 代码中的等价关系</h1>
         
 
         <div class="post-meta">
@@ -370,7 +370,7 @@
 <ul>
 <li><a href="https://leetcode-cn.com/problems/satisfiability-of-equality-equations/" target="_blank" rel="noopener">990. 等式方程的可满足性</a>  </li>
 </ul>
-<p>因为最近的题都和离散数学有关，一看到题我就想起了最近学的离散数学中的恒等关系，于是想有么有一种可以表示 A 上的一个恒等闭包的数据结构。<br>经过百度之后，我找到了并查集这种数据结构，感觉可以实现一个恒等闭包，特此记录下来。</p>
+<p>因为最近的题都和离散数学有关，一看到题我就想起了最近学的离散数学中的等价关系，于是想有么有一种可以表示 A 上的一个等价闭包的数据结构。<br>经过百度之后，我找到了并查集这种数据结构，感觉可以实现一个等价闭包，特此记录下来。</p>
 <p>并查集属于第三级的数据结构 —— 这是我自己想的数据结构分级：</p>
 <ul>
 <li>一级数据结构为树，链表和数组，这种是各种代码原生就可以实现，不用引入库。</li>
@@ -378,30 +378,30 @@
 <li>三级数据结构就是为了实现特定的逻辑，需要我们灵活使用一二级的数据结构来封装的一种，这类数据结构一般语言没有自带库。</li>
 </ul>
 <p>在打题或者面试的时候，一二级数据结构通常我们可以直接调用库，而三级数据结构需要我们自己去实现。并查集就是第三级的数据结构。</p>
-<h2 id="恒等关系"><a href="#恒等关系" class="headerlink" title="恒等关系"></a>恒等关系</h2><p>恒等关系为 A 上的一个具有自反性、对称性、传递性的一个关系 R 。具体有如下性质：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. 对于所有 a ∈ A, 关系 &lt;a,a&gt; 一定 ∈ R ，对应自反性。</span><br><span class="line">2. 如果 &lt;a,b&gt; ∈ R ，则 &lt;b,a&gt; 也 ∈ R ，对应对称性。</span><br><span class="line">3. 如果 &lt;a,b&gt; ∈ R 且 &lt;b,c&gt; ∈ R ，则 &lt;a,c&gt; 也 ∈ R ，对应传递性。</span><br></pre></td></tr></table></figure></p>
-<p>如果一个关系满足以上条件，则该关系为恒等关系。</p>
-<h2 id="恒等闭包"><a href="#恒等闭包" class="headerlink" title="恒等闭包"></a>恒等闭包</h2><p>对于 A 上任意一个关系 R，R 可能不是恒等关系。如果往 R 中加入最少的序偶，使得新的 R 变为恒等关系，则这个新的 R 为原来 R 的恒等闭包。</p>
+<h2 id="等价关系"><a href="#等价关系" class="headerlink" title="等价关系"></a>等价关系</h2><p>等价关系为 A 上的一个具有自反性、对称性、传递性的一个关系 R 。具体有如下性质：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1. 对于所有 a ∈ A, 关系 &lt;a,a&gt; 一定 ∈ R ，对应自反性。</span><br><span class="line">2. 如果 &lt;a,b&gt; ∈ R ，则 &lt;b,a&gt; 也 ∈ R ，对应对称性。</span><br><span class="line">3. 如果 &lt;a,b&gt; ∈ R 且 &lt;b,c&gt; ∈ R ，则 &lt;a,c&gt; 也 ∈ R ，对应传递性。</span><br></pre></td></tr></table></figure></p>
+<p>如果一个关系满足以上条件，则该关系为等价关系。</p>
+<h2 id="等价闭包"><a href="#等价闭包" class="headerlink" title="等价闭包"></a>等价闭包</h2><p>对于 A 上任意一个关系 R，R 可能不是等价关系。如果往 R 中加入最少的序偶，使得新的 R 变为等价关系，则这个新的 R 为原来 R 的等价闭包。</p>
 <p>例如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">A &#x3D; &#123;a ,b ,c&#125;</span><br><span class="line">R &#x3D; &#123;&lt;a,a&gt; ,&lt;b,b&gt; ,&lt;a,b&gt; ,&lt;b,a&gt;&#125;</span><br></pre></td></tr></table></figure></p>
-<p>我们可以看到 R 是 A 上一个二元关系，但是 R 并不是恒等关系，因为 <code>&lt;c,c&gt; ∉ R</code>，不满足上面条件 1。而我们只要往 R 中加入一个 <code>&lt;c,c&gt;</code> 变为 R’ ：</p>
+<p>我们可以看到 R 是 A 上一个二元关系，但是 R 并不是等价关系，因为 <code>&lt;c,c&gt; ∉ R</code>，不满足上面条件 1。而我们只要往 R 中加入一个 <code>&lt;c,c&gt;</code> 变为 R’ ：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">A &#x3D; &#123;a ,b ,c&#125;</span><br><span class="line">R &#x3D; &#123;&lt;a,a&gt; ,&lt;b,b&gt; ,&lt;a,b&gt; ,&lt;b,a&gt;&#125;</span><br><span class="line">R&#39; &#x3D; &#123;&lt;a,a&gt; ,&lt;b,b&gt; ,&lt;a,b&gt; ,&lt;b,a&gt; ,&lt;c,c&gt;&#125;</span><br></pre></td></tr></table></figure>
-<p>可以看到 R’ 符合恒等关系的条件，所以 R’ 为 R 的恒等闭包。</p>
+<p>可以看到 R’ 符合等价关系的条件，所以 R’ 为 R 的等价闭包。</p>
 <h2 id="并查集"><a href="#并查集" class="headerlink" title="并查集"></a>并查集</h2><p>并查集其实可以抽象为一个有向图，例如下图：</p>
 <img src="/2020/06/08/1591603108/1.png" class="[1]">
-<p>其实恒等关系可以理解为一种类似江湖间的朋友机制，江湖里英雄们都很讲义气，他们有以下信条：</p>
+<p>其实等价关系可以理解为一种类似江湖间的朋友机制，江湖里英雄们都很讲义气，他们有以下信条：</p>
 <ol>
 <li>我是我自己的朋友</li>
 <li>你把我当朋友，我也一定把你当朋友</li>
 <li>朋友的朋友也是我的朋友</li>
 </ol>
-<p>这三条分别对应着恒等关系三条规则，那么问题来了，任意给定两个人，怎么判断他们是不是朋友呢 ？</p>
-<p>这个模型可以用上面的有向图解决，首先各个点对应着各个人，其次，a 和 b 之间有箭头代表他们一定是朋友 。其次，因为有第三条，朋友的朋友也是朋友，所以最终一定会形成这样一种树状的结构，只要两个点在同一条树上，则两个人就是朋友，这也是并查集用来表示恒等关系的原理。</p>
+<p>这三条分别对应着等价关系三条规则，那么问题来了，任意给定两个人，怎么判断他们是不是朋友呢 ？</p>
+<p>这个模型可以用上面的有向图解决，首先各个点对应着各个人，其次，a 和 b 之间有箭头代表他们一定是朋友 。其次，因为有第三条，朋友的朋友也是朋友，所以最终一定会形成这样一种树状的结构，只要两个点在同一条树上，则两个人就是朋友，这也是并查集用来表示等价关系的原理。</p>
 <h2 id="查找和合并"><a href="#查找和合并" class="headerlink" title="查找和合并"></a>查找和合并</h2><p>并查集拥有两个操作：</p>
 <p>一是查找，则给定 a 和 b ，判断 <code>&lt;a,b&gt;</code> 是否 ∈ R，回到刚刚的有向图，则问题等价于 a 和 b 是否在同一颗树上。具体做法是对 a 和 b 分别向上取父节点，最终会取到某一棵树的根节点，如果 a 和 b 的根节点为同一个点，则 a 和 b 在同一棵树内，则 <code>&lt;a,b&gt; ∈ R</code> ，否则反之。根据题目的特殊性，有可能需要对查找到的两个根节点进行相关操作，具体要看具体问题。</p>
 <p>二是合并，还是以最初的关系为例：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">A &#x3D; &#123;a ,b ,c&#125;</span><br><span class="line">R &#x3D; &#123;&lt;a,a&gt; ,&lt;b,b&gt; ,&lt;a,b&gt; ,&lt;b,a&gt; ,&lt;c,c&gt;&#125;</span><br></pre></td></tr></table></figure>
-<p>R 为恒等关系，此时我门把 <code>&lt;b,c&gt;</code> 加入 R 中，可以看到加入后 R 肯定不是恒等关系，而我们此时对新的 R 取恒等闭包，最终会形成以下的新关系：</p>
+<p>R 为等价关系，此时我门把 <code>&lt;b,c&gt;</code> 加入 R 中，可以看到加入后 R 肯定不是等价关系，而我们此时对新的 R 取等价闭包，最终会形成以下的新关系：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">A &#x3D; &#123;a ,b ,c&#125;</span><br><span class="line">R &#x3D; &#123;&lt;a,a&gt; ,&lt;b,b&gt; ,&lt;a,b&gt; ,&lt;b,a&gt; ,&lt;c,c&gt;&#125;</span><br><span class="line">R&#39; &#x3D; &#123;&lt;a,a&gt; ,&lt;b,b&gt; ,&lt;a,b&gt; ,&lt;b,a&gt; ,&lt;c,c&gt;</span><br><span class="line">        ,&lt;b,c&gt; ,&lt;c,b&gt; ,&lt;a,c&gt;&#125;</span><br></pre></td></tr></table></figure>
-<p>新的 R’ 依然是一个恒等关系，这就是合并操作，对于并查集，我们把 b 和 c 合并相当于把 <code>&lt;b,c&gt;</code> 加入到关系中并对新关系取闭包。</p>
+<p>新的 R’ 依然是一个等价关系，这就是合并操作，对于并查集，我们把 b 和 c 合并相当于把 <code>&lt;b,c&gt;</code> 加入到关系中并对新关系取闭包。</p>
 <p>例如以下的并查集图：</p>
 <img src="/2020/06/08/1591603108/2.png" class="[2]">
 <p>我们对 b c 进行合并操作，相当于想办法让 b 和 c 处于同一棵树内，且不破坏原本的关系，即对于除 b c 外其他任何一个元素，原来在一棵树上的，现在依然也在一棵树上。</p>
@@ -423,22 +423,22 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：[&quot;a&#x3D;&#x3D;b&quot;,&quot;b&#x3D;&#x3D;c&quot;,&quot;a&#x3D;&#x3D;c&quot;]</span><br><span class="line">输出：true</span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：[&quot;a&#x3D;&#x3D;b&quot;,&quot;b!&#x3D;c&quot;,&quot;c&#x3D;&#x3D;a&quot;]</span><br><span class="line">输出：false</span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：[&quot;c&#x3D;&#x3D;c&quot;,&quot;b&#x3D;&#x3D;d&quot;,&quot;x!&#x3D;z&quot;]</span><br><span class="line">输出：true</span><br></pre></td></tr></table></figure>
-<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>这题粗一看好像要代入数据看是否矛盾，实际上没必要。首先根据 <code>等于</code> 这个关系的性质，<code>等于</code> 关系是一个恒等关系。</p>
+<h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><p>这题粗一看好像要代入数据看是否矛盾，实际上没必要。首先根据 <code>等于</code> 这个关系的性质，<code>等于</code> 关系是一个等价关系。</p>
 <p>因为 = 满足以下条件：</p>
 <ol>
-<li>a = a ，对应恒等关系第一条</li>
-<li>如果 a = b 则 b = a ，对应恒等关系第二条</li>
-<li>如果 a = b ， b = c 则 a = c ，对应恒等关系第三条</li>
+<li>a = a ，对应等价关系第一条</li>
+<li>如果 a = b 则 b = a ，对应等价关系第二条</li>
+<li>如果 a = b ， b = c 则 a = c ，对应等价关系第三条</li>
 </ol>
-<p>对于这个恒等关系，这里的 A 是 26 个小写的英文字母。</p>
+<p>对于这个等价关系，这里的 A 是 26 个小写的英文字母。</p>
 <p>而对于本题，如果要返回 false ，则必须满足以下条件：</p>
 <ul>
-<li>a != b 且 a == b 。其中 a == b 可能不在它给的条件中，但是可以由恒等关系得出（一般是利用第三条得出的）</li>
+<li>a != b 且 a == b 。其中 a == b 可能不在它给的条件中，但是可以由等价关系得出（一般是利用第三条得出的）</li>
 </ul>
-<p>那思路就有了，首先先遍历一遍所有 <code>a==b</code> 的式子，把 <code>&lt;a,b&gt;</code> 加入到一个关系 R 中，全部加入后，对 R 取恒等闭包 R’ 。</p>
+<p>那思路就有了，首先先遍历一遍所有 <code>a==b</code> 的式子，把 <code>&lt;a,b&gt;</code> 加入到一个关系 R 中，全部加入后，对 R 取等价闭包 R’ 。</p>
 <p>再次遍历所有 a!=b 的式子，判断序偶 <code>&lt;a,b&gt;</code> 是否在 R’ 中，如果存在，则 返回 false ，如果所有都不存在，则返回 true 。</p>
 <p>对于程序来说，就需要用到并查集这样的结构，对于以上来说，加入取闭包为对并查集进行合并操作，判断是否在里面则为对并查集的查找操作。</p>
-<p>首先新建一个容量为 26 分别对应 26 个英文字母的并查集 —— 并查集因为是对应恒等关系，而恒等关系是在一个集合上的二元关系，所以需要指定集合 A 。在代码中，可以直接设定容量，然后根据下标数字来对应自己想要的东西。</p>
+<p>首先新建一个容量为 26 分别对应 26 个英文字母的并查集 —— 并查集因为是对应等价关系，而等价关系是在一个集合上的二元关系，所以需要指定集合 A 。在代码中，可以直接设定容量，然后根据下标数字来对应自己想要的东西。</p>
 <p>这样一来，循环遍历两次，第一次只遍历 a==b 的情况，然后对并查集进行合并 a 和 b 的操作。第二次只遍历 a!=b 的情况，然后对并查集进行查找 a 和 b 的操作，如果有一个 a 和 b 属于同一个根节点，则返回 false ，否则返回 true。</p>
 <h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>并查集属于三级数据结构，打题的时候需要自己实现。虽然并查集是有向图的一种树，但是我们一般不用树这种数据结构，一般比较常用的为数组和哈希表。除此之外。容易看出，查找某两个值的时候，需要一直往上找到根节点，所以并查集的效率取决于树的高度，然后就衍生出一系列减少树高度的优化措施，具体之后到代码实践的时候在说吧。</p>
 
@@ -617,7 +617,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#恒等关系"><span class="nav-number">1.</span> <span class="nav-text">恒等关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#恒等闭包"><span class="nav-number">2.</span> <span class="nav-text">恒等闭包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#并查集"><span class="nav-number">3.</span> <span class="nav-text">并查集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查找和合并"><span class="nav-number">4.</span> <span class="nav-text">查找和合并</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#应用"><span class="nav-number">5.</span> <span class="nav-text">应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#题目描述"><span class="nav-number">5.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#输入示例"><span class="nav-number">5.2.</span> <span class="nav-text">输入示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#思路"><span class="nav-number">5.3.</span> <span class="nav-text">思路</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后记"><span class="nav-number">6.</span> <span class="nav-text">后记</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#等价关系"><span class="nav-number">1.</span> <span class="nav-text">等价关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#等价闭包"><span class="nav-number">2.</span> <span class="nav-text">等价闭包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#并查集"><span class="nav-number">3.</span> <span class="nav-text">并查集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查找和合并"><span class="nav-number">4.</span> <span class="nav-text">查找和合并</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#应用"><span class="nav-number">5.</span> <span class="nav-text">应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#题目描述"><span class="nav-number">5.1.</span> <span class="nav-text">题目描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#输入示例"><span class="nav-number">5.2.</span> <span class="nav-text">输入示例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#思路"><span class="nav-number">5.3.</span> <span class="nav-text">思路</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后记"><span class="nav-number">6.</span> <span class="nav-text">后记</span></a></li></ol></div>
             
 
           </div>

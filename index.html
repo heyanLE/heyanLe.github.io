@@ -268,6 +268,183 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://heyanle.com/2020/06/18/1592447060/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="何言">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="何言的杂货店">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/06/18/1592447060/" itemprop="url">LeetCode 990. 等式方程的可满足性 并查集</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-18T10:24:38+08:00">
+                2020-06-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%89%93%E9%A2%98/" itemprop="url" rel="index">
+                    <span itemprop="name">打题</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>这是六月八日的每日一题，可以说是并查集的具体应用吧。</p>
+<h2 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h2><ul>
+<li><p><a href="https://leetcode-cn.com/problems/satisfiability-of-equality-equations/" target="_blank" rel="noopener">990. 等式方程的可满足性</a>  </p>
+</li>
+<li><p>给定一个由表示变量之间关系的字符串方程组成的数组，每个字符串方程 <code>equations[i]</code> 的长度为 <code>4</code>，并采用两种不同的形式之一：<code>&quot;a==b&quot;</code> 或 <code>&quot;a!=b&quot;</code>。在这里，<code>a</code> 和 <code>b</code> 是小写字母（不一定不同），表示单字母变量名。</p>
+</li>
+<li><p>只有当可以将整数分配给变量名，以便满足所有给定的方程时才返回 <code>true</code>，否则返回 <code>false</code>。</p>
+</li>
+</ul>
+<h2 id="输入示例"><a href="#输入示例" class="headerlink" title="输入示例"></a>输入示例</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：[&quot;a&#x3D;&#x3D;b&quot;,&quot;b!&#x3D;a&quot;]</span><br><span class="line">输出：false</span><br><span class="line">解释：如果我们指定，a &#x3D; 1 且 b &#x3D; 1，那么可以满足第一个方程，但无法满足第二个方程。没有办法分配变量同时满足这两个方程。</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输出：[&quot;b&#x3D;&#x3D;a&quot;,&quot;a&#x3D;&#x3D;b&quot;]</span><br><span class="line">输入：true</span><br><span class="line">解释：我们可以指定 a &#x3D; 1 且 b &#x3D; 1 以满足满足这两个方程。</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：[&quot;a&#x3D;&#x3D;b&quot;,&quot;b&#x3D;&#x3D;c&quot;,&quot;a&#x3D;&#x3D;c&quot;]</span><br><span class="line">输出：true</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：[&quot;a&#x3D;&#x3D;b&quot;,&quot;b!&#x3D;c&quot;,&quot;c&#x3D;&#x3D;a&quot;]</span><br><span class="line">输出：false</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入：[&quot;c&#x3D;&#x3D;c&quot;,&quot;b&#x3D;&#x3D;d&quot;,&quot;x!&#x3D;z&quot;]</span><br><span class="line">输出：true</span><br></pre></td></tr></table></figure>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>可以从离散数学角度想这个问题，先定义一个集合 A 为 26 个小写字母的集合，并定义一个 A 上的关系 R 。</p>
+<p>先遍历一遍所有式子，如果是 == 的，就将关系加入 R 。例如遇到 a == c ，则将序偶 <code>&lt;a, c&gt;</code> 加入 R 。</p>
+<p>遍历完毕后对 R 取等价闭包。得到所有相等的关系。</p>
+<p>在遍历一遍所有式子，如果是 !=  的，判断该关系是否在 R 中。</p>
+<p>如果全部都不在 返回 true 否则返回 false 。</p>
+<p>这里的等价闭包直接用并查集解决。</p>
+<p>有关于并查集的可以查看两篇与并查集有关的文章：</p>
+<ul>
+<li><p><a href="https://heyanle.com/2020/06/08/1591603108/">关于 并查集 - 代码中的等价关系</a></p>
+</li>
+<li><p><a href="https://heyanle.com/2020/06/17/1592383413/">关于 并查集 - 代码实现与优化</a></p>
+</li>
+</ul>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><ul>
+<li>代码：C ++</li>
+</ul>
+<p>并查集实现（只使用隔代压缩）：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UnionFind</span>&#123;</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; parent;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    UnionFind(<span class="keyword">int</span> size)&#123;</span><br><span class="line">        parent = <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;(size);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; parent.size() ; i ++)&#123;</span><br><span class="line">            parent[i] = i;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">find</span><span class="params">(<span class="keyword">int</span> x)</span></span>&#123;</span><br><span class="line">        <span class="keyword">while</span>(parent[x] != x)&#123;</span><br><span class="line">            parent[x] = parent[parent[x]];</span><br><span class="line">            x = parent[x];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> x;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">union_</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> rootX = find(x);</span><br><span class="line">        <span class="keyword">int</span> rootY = find(y);</span><br><span class="line">        parent[rootX] = rootY;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">isConnected</span><span class="params">(<span class="keyword">int</span> x ,<span class="keyword">int</span> y)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> rootX = find(x);</span><br><span class="line">        <span class="keyword">int</span> rootY = find(y);</span><br><span class="line">        <span class="keyword">return</span> rootX == rootY;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>解题代码：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">equationsPossible</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt;&amp; equations)</span> </span>&#123;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">auto</span> *unionFind = <span class="keyword">new</span> UnionFind(<span class="number">26</span>);</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">auto</span> &amp;s:equations)&#123;</span><br><span class="line">            <span class="keyword">if</span>(s[<span class="number">1</span>] == <span class="string">'='</span>)&#123;</span><br><span class="line">                unionFind-&gt;union_(s[<span class="number">0</span>]-<span class="string">'a'</span> ,s[<span class="number">3</span>]-<span class="string">'a'</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">auto</span> &amp;s:equations)&#123;</span><br><span class="line">            <span class="keyword">if</span>(s[<span class="number">1</span>] == <span class="string">'!'</span>)&#123;</span><br><span class="line">                <span class="keyword">if</span>(unionFind-&gt;isConnected(s[<span class="number">0</span>]-<span class="string">'a'</span> ,s[<span class="number">3</span>]-<span class="string">'a'</span>))&#123;</span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><img src="/2020/06/18/1592447060/1.png" class="[1]">
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>至此，有关并查集的一切都结束。因为最近团队需要，学习了一下 Flutter ，可能会更一些有关 Flutter 的资料吧。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://heyanle.com/2020/06/17/1592383413/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1984,168 +2161,13 @@ p2 &= p(i-1 , p)
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://heyanle.com/2020/03/19/1584628653/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="何言">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="何言的杂货店">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/03/19/1584628653/" itemprop="url">关于 Android App 整体字体自定义</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-19T22:39:34+08:00">
-                2020-03-19
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Android/" itemprop="url" rel="index">
-                    <span itemprop="name">Android</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>最近项目有一个需求，需要让 App 支持自定义字体，并且要支持用户自己指定的 ttf 文件，经过不懈努力，终于实现了，赶紧写一篇博客记录下来。  </p>
-<h2 id="Typeface"><a href="#Typeface" class="headerlink" title="Typeface"></a>Typeface</h2><p><code>Typeface</code> 是一个字体的实体类，可以通过调用 <code>TextView</code> 的 <code>setTypeface</code> 方法来设置一个 <code>TextView</code> 的字体。而大部分的和字体有关的 <code>View</code> 都继承于 <code>TextView</code> ，所以我们可以写一个字体管理类，维护一个 <code>Typeface</code> 变量，而每一个 <code>View</code> 在渲染后，都将自己的字体设置为字体管理类的字体。</p>
-<h3 id="Typeface-创建"><a href="#Typeface-创建" class="headerlink" title="Typeface 创建"></a>Typeface 创建</h3><p>查阅了一下 Api 文档，发现有两种方式可以创建 <code>Typeface</code> :</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Typeface.createFromAsset(context.getAssets(), path);</span><br><span class="line">Typeface.createFromFile(path);</span><br></pre></td></tr></table></figure>
-<p>其中第一种为项目 <code>Assets</code> 文件夹里的字体文件，第二种为手机储存上的字体文件。</p>
-<h2 id="FontHelper"><a href="#FontHelper" class="headerlink" title="FontHelper"></a>FontHelper</h2><p><code>FontHelper</code> 是一个静态类或单例类，它具有以下功能：</p>
-<ul>
-<li>根据要求创建相应的 <code>Typeface</code> 对象并储存</li>
-<li>修改一个 <code>View</code> 及其所有子 <code>View</code> 的字体</li>
-</ul>
-<h3 id="Typeface-对象创建和维护"><a href="#Typeface-对象创建和维护" class="headerlink" title="Typeface 对象创建和维护"></a>Typeface 对象创建和维护</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> Typeface mTypeFace = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 使用 Assets 文件夹下的字体文件创建 Typeface 对象</span></span><br><span class="line"><span class="comment">* <span class="doctag">@param</span> context    上下文</span></span><br><span class="line"><span class="comment">* <span class="doctag">@param</span> path       字体文件路径</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">initFromAssets</span><span class="params">(Context context ,String path)</span></span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        mTypeFace = Typeface.createFromAsset(context.getAssets(), path);</span><br><span class="line">    &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 使用手机储存中的字体文件创建 Typeface 对象</span></span><br><span class="line"><span class="comment">* <span class="doctag">@param</span> path       字体文件路径</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">initFromSD</span><span class="params">(String path)</span></span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        mTypeFace = Typeface.createFromFile(path);</span><br><span class="line">    &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">        mTypeFace = Typeface.DEFAULT;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="递归设置-View"><a href="#递归设置-View" class="headerlink" title="递归设置 View"></a>递归设置 View</h3><p>通过递归，设置一个 <code>View</code> 及其所有子 <code>View</code> 的字体。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">font</span><span class="params">(View view)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mTypeFace == <span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (view == <span class="keyword">null</span> ) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (view <span class="keyword">instanceof</span> TextView) &#123;</span><br><span class="line">        TextView textView = (TextView)view;</span><br><span class="line">        textView.setTypeface(mTypeFace);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (view <span class="keyword">instanceof</span> ViewGroup) &#123;</span><br><span class="line">        ViewGroup viewGroup = (ViewGroup) view;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; viewGroup.getChildCount(); ++i) &#123;</span><br><span class="line">            font(viewGroup.getChildAt(i));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="设置-Paint-的字体（-适用于自定义-View-）"><a href="#设置-Paint-的字体（-适用于自定义-View-）" class="headerlink" title="设置 Paint 的字体（ 适用于自定义 View ）"></a>设置 Paint 的字体（ 适用于自定义 View ）</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">font</span><span class="params">(Paint paint)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (mTypeFace == <span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(paint == <span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    paint.setTypeface(mTypeFace);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="设置-Activity-的字体"><a href="#设置-Activity-的字体" class="headerlink" title="设置 Activity 的字体"></a>设置 Activity 的字体</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">font</span><span class="params">(Activity activity)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>( mTypeface == <span class="keyword">null</span> )&#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(activity == <span class="keyword">null</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    View rootView = ((ViewGroup)activity.findViewById(android.R.id.content)).getChildAt(<span class="number">0</span>);</span><br><span class="line">    font(rootView);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="在相关-Context-中调用"><a href="#在相关-Context-中调用" class="headerlink" title="在相关 Context 中调用"></a>在相关 Context 中调用</h2><h3 id="Activity"><a href="#Activity" class="headerlink" title="Activity"></a>Activity</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">baseActivity</span>  <span class="keyword">extends</span> <span class="title">AppCompatActivity</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onStart</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        FontHelper.getInstance().font(<span class="keyword">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="Fragment"><a href="#Fragment" class="headerlink" title="Fragment"></a>Fragment</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">baseFragment</span>  <span class="keyword">extends</span> <span class="title">Fragment</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onViewCreated</span><span class="params">(View view, Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        FontHelper.getInstance().font(view);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="缺陷"><a href="#缺陷" class="headerlink" title="缺陷"></a>缺陷</h2><p>这种方式设置自定义字体，相比于反射已经非常优雅和稳定了，但是它依然有部分缺陷，例如使用官方模板的 <code>Dialog</code> （如果是自定义 <code>Dialog</code> 可以将 <code>View</code> 设置字体）和 <code>PopupWindow</code> 等。暂时还没想到解决方案。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">&lt;i class&#x3D;&quot;fa fa-angle-right&quot;&gt;&lt;&#x2F;i&gt;</a>
+  </nav>
+
 
 
           </div>
@@ -2193,7 +2215,7 @@ p2 &= p(i-1 , p)
               
                 <a href="/archives/%7C%7C%20archive">
               
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2215,7 +2237,7 @@ p2 &= p(i-1 , p)
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-count">17</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

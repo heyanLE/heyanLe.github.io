@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.jpg?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.jpg?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.jpg?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="实战," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="因为团队需求，开始写 Flutter ，不得不说用于快速开发太方便了。 不过在一些情况下的处理逻辑和 Android 差了好多。 直接上需求效果图：  这个需求简单地说就是 对话框 中有一个 文本框 ，点击 文本框 后会弹出时间选择界面，选择后更新 文本框 文本。 在 Android 里是非常容易的。但是在 Flutter 中，反正我一开始连修改文本框的文本都不会，最后在同伴的帮助下解决了。特此记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于 Flutter Dialog 中动态修改 Text">
+<meta property="og:url" content="http://heyanle.com/2020/06/19/1592556998/index.html">
+<meta property="og:site_name" content="何言的杂货店">
+<meta property="og:description" content="因为团队需求，开始写 Flutter ，不得不说用于快速开发太方便了。 不过在一些情况下的处理逻辑和 Android 差了好多。 直接上需求效果图：  这个需求简单地说就是 对话框 中有一个 文本框 ，点击 文本框 后会弹出时间选择界面，选择后更新 文本框 文本。 在 Android 里是非常容易的。但是在 Flutter 中，反正我一开始连修改文本框的文本都不会，最后在同伴的帮助下解决了。特此记">
+<meta property="og:image" content="http://heyanle.com/2020/06/19/1592556998/1.gif">
+<meta property="article:published_time" content="2020-06-19T08:56:46.000Z">
+<meta property="article:modified_time" content="2020-06-19T09:33:32.352Z">
+<meta property="article:author" content="何言">
+<meta property="article:tag" content="实战">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://heyanle.com/2020/06/19/1592556998/1.gif">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://heyanle.com/2020/06/19/1592556998/"/>
+
+
+
+
+
+  <title>关于 Flutter Dialog 中动态修改 Text | 何言的杂货店</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">何言的杂货店</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-友联">
+          <a href="/link/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heart"></i> <br />
+            
+            友联
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://heyanle.com/2020/06/19/1592556998/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="何言">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="何言的杂货店">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">关于 Flutter Dialog 中动态修改 Text</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-19T16:56:46+08:00">
+                2020-06-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Flutter/" itemprop="url" rel="index">
+                    <span itemprop="name">Flutter</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>因为团队需求，开始写 <code>Flutter</code> ，不得不说用于快速开发太方便了。</p>
+<p>不过在一些情况下的处理逻辑和 <code>Android</code> 差了好多。</p>
+<p>直接上需求效果图：</p>
+<img src="/2020/06/19/1592556998/1.gif" class="[1]">
+<p>这个需求简单地说就是 对话框 中有一个 文本框 ，点击 文本框 后会弹出时间选择界面，选择后更新 文本框 文本。</p>
+<p>在 <code>Android</code> 里是非常容易的。但是在 <code>Flutter</code> 中，反正我一开始连修改文本框的文本都不会，最后在同伴的帮助下解决了。特此记录下来。</p>
+<h2 id="显示对话框"><a href="#显示对话框" class="headerlink" title="显示对话框"></a>显示对话框</h2><p>显示对话框就容易了，直接上方法模型：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// <span class="markdown">展示添加提醒提示框</span></span></span><br><span class="line">Future&lt;<span class="keyword">void</span>&gt; _showAddReminderDialog() <span class="keyword">async</span> &#123;</span><br><span class="line">    <span class="keyword">await</span> showDialog(</span><br><span class="line">        context: context,</span><br><span class="line">        builder: (BuildContext context) &#123;</span><br><span class="line">            <span class="comment">/// <span class="markdown">对话框 Builder</span></span></span><br><span class="line">        &#125;</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一般而言，我们会直接在 对话框 <code>builder</code> 里返回一个 <code>AlertDialog</code> 对象，但是直接构造的 <code>AlertDialog</code> 是无状态的 <code>widget</code> ，没办法满足动态更换 <code>Text</code> 的需求。所以我们这里需要在 <code>builder</code> 里返回一个状态空间让这个 <code>Dialog</code> 带状态，也就是 <code>StatefulBuilder</code>，然后在状态空间里返回对话框 <code>AlertDialog</code>。</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// <span class="markdown">展示添加提醒提示框</span></span></span><br><span class="line">Future&lt;<span class="keyword">void</span>&gt; _showAddReminderDialog() <span class="keyword">async</span> &#123;</span><br><span class="line">    <span class="keyword">await</span> showDialog(</span><br><span class="line">        context: context,</span><br><span class="line">        builder: (BuildContext context) &#123;</span><br><span class="line">            <span class="comment">/// <span class="markdown">返回状态构造器</span></span></span><br><span class="line">            <span class="keyword">return</span> StatefulBuilder(</span><br><span class="line">                builder: </span><br><span class="line">                (BuildContext context, StateSetter setState) &#123;</span><br><span class="line">                    <span class="comment">/// <span class="markdown">状态空间的一个变量，当前选中的时间</span></span></span><br><span class="line">                    <span class="built_in">int</span> _chooseTime = <span class="built_in">DateTime</span>.now().millisecondsSinceEpoch;</span><br><span class="line">                    <span class="keyword">return</span> AlertDialog(</span><br><span class="line">                        <span class="comment">/// <span class="markdown">对话框参数</span></span></span><br><span class="line">                    ); <span class="comment">// AlertDialog</span></span><br><span class="line">                &#125;</span><br><span class="line">            ); <span class="comment">// StatefulBuilder</span></span><br><span class="line">        &#125;</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="构造对话框"><a href="#构造对话框" class="headerlink" title="构造对话框"></a>构造对话框</h2><p>以下直接给出 <code>AlertDialog</code> 的对象模型，之前的显示和状态空间构造器省略。</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">AlertDialog(</span><br><span class="line">    shape: RoundedRectangleBorder(</span><br><span class="line">        borderRadius: BorderRadius.circular(<span class="number">8.0</span>),</span><br><span class="line">    ), <span class="comment">// RoundedRectangleBorder</span></span><br><span class="line">    title: <span class="keyword">const</span> Text(<span class="string">'选择时间'</span>),</span><br><span class="line">    content：InkWell(</span><br><span class="line">        onTap: () <span class="keyword">async</span> &#123;</span><br><span class="line">            <span class="comment">/// <span class="markdown">点击事件 ……</span></span></span><br><span class="line">        &#125;,</span><br><span class="line">        child: Text(</span><br><span class="line">            () &#123;</span><br><span class="line">                <span class="built_in">DateTime</span> dateTime =</span><br><span class="line">                <span class="built_in">DateTime</span>.fromMillisecondsSinceEpoch(_chooseTime);</span><br><span class="line">                <span class="keyword">return</span> <span class="string">'<span class="subst">$&#123;dateTime.year&#125;</span>/<span class="subst">$&#123;dateTime.month&#125;</span>/<span class="subst">$&#123;dateTime.day&#125;</span> <span class="subst">$&#123;dateTime.hour&#125;</span>:<span class="subst">$&#123;dateTime.minute&#125;</span>:<span class="subst">$&#123;dateTime.second&#125;</span>'</span>;</span><br><span class="line">            &#125;(),</span><br><span class="line">        ), <span class="comment">// Text</span></span><br><span class="line">        actions: [</span><br><span class="line">            FlatButton(</span><br><span class="line">                <span class="comment">/// <span class="markdown">确认按钮 ……</span></span></span><br><span class="line">            ), <span class="comment">// FlatButton</span></span><br><span class="line">            FlatButton(</span><br><span class="line">                <span class="comment">/// <span class="markdown">取消按钮 ……</span></span></span><br><span class="line">            ), <span class="comment">// FlatButton</span></span><br><span class="line">        ]</span><br><span class="line">    )<span class="comment">// InkWell</span></span><br><span class="line">) <span class="comment">// AlertDialog</span></span><br></pre></td></tr></table></figure>
+<p>搞定，在状态空间中，当需要更新当前选择的时间的时候，直接调用：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">setState(() &#123;</span><br><span class="line">    _chooseTime = date.millisecondsSinceEpoch;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>首先是时间显示：<br><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Text(</span><br><span class="line">    () &#123;</span><br><span class="line">        <span class="built_in">DateTime</span> dateTime =</span><br><span class="line">        <span class="built_in">DateTime</span>.fromMillisecondsSinceEpoch(_chooseTime);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">'<span class="subst">$&#123;dateTime.year&#125;</span>/<span class="subst">$&#123;dateTime.month&#125;</span>/<span class="subst">$&#123;dateTime.day&#125;</span> <span class="subst">$&#123;dateTime.hour&#125;</span>:<span class="subst">$&#123;dateTime.minute&#125;</span>:<span class="subst">$&#123;dateTime.second&#125;</span>'</span>;</span><br><span class="line">    &#125;(),</span><br><span class="line">), <span class="comment">// Text</span></span><br></pre></td></tr></table></figure><br>构造 <code>Text</code> 对象的时候我们不直接传入要显示的内容，而是传入一个返回值为 <code>string</code> 的闭包方法。闭包方法中我们直接获取状态空间中 <code>_chooseTime</code> 变量并构造字符串。</p>
+<p><code>setState</code> 为刚刚 <code>StatefulBuilder</code> 的第二个参数，是一个回调对象，要传入一个方法，方法内部可以修改你要修改的变量。</p>
+<p>当你向 <code>setState</code> 传入回调后，回调会先被调用，然后整个状态空间将会重新调用 <code>build</code> 方法，即重建整个 <code>AlertDialog</code>。此时的 <code>Text</code> 依然是获取 <code>_chooseTime</code> 变量，只不过我们已经通过回调改变了它的值。</p>
+<h2 id="完整代码（包括时间选择）"><a href="#完整代码（包括时间选择）" class="headerlink" title="完整代码（包括时间选择）"></a>完整代码（包括时间选择）</h2><p>这里是项目中完整的代码，初始时间为当前日记的时间，点击添加提醒后将向系统日历添加一个日程。</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// <span class="markdown">展示添加提醒提示框</span></span></span><br><span class="line">  Future&lt;<span class="keyword">void</span>&gt; _showAddReminderDialog() <span class="keyword">async</span> &#123;</span><br><span class="line">    <span class="keyword">await</span> showDialog(</span><br><span class="line">      context: context,</span><br><span class="line">      builder: (BuildContext context) &#123;</span><br><span class="line">        <span class="keyword">return</span> StatefulBuilder(</span><br><span class="line">          builder: (BuildContext context, StateSetter setState) &#123;</span><br><span class="line">            <span class="built_in">int</span> _chooseTime =</span><br><span class="line">                widget.note?.time ?? <span class="built_in">DateTime</span>.now().millisecondsSinceEpoch;</span><br><span class="line">            <span class="keyword">return</span> AlertDialog(</span><br><span class="line">              shape: RoundedRectangleBorder(</span><br><span class="line">                borderRadius: BorderRadius.circular(<span class="number">8.0</span>),</span><br><span class="line">              ), <span class="comment">// RoundedRectangleBorder</span></span><br><span class="line">              title: Text(S.of(context).add_reminder),</span><br><span class="line">              content: InkWell(</span><br><span class="line">                onTap: () <span class="keyword">async</span> &#123;</span><br><span class="line">                  <span class="built_in">DateTime</span> dateTime = <span class="built_in">DateTime</span>.now();</span><br><span class="line">                  <span class="keyword">if</span> (widget.note?.time != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    dateTime = <span class="built_in">DateTime</span>.fromMillisecondsSinceEpoch(</span><br><span class="line">                      widget.note.time,</span><br><span class="line">                    );</span><br><span class="line">                  &#125;</span><br><span class="line">                  <span class="built_in">DateTime</span> date = <span class="keyword">await</span> showDatePicker(</span><br><span class="line">                    context: context,</span><br><span class="line">                    initialDate: dateTime,</span><br><span class="line">                    firstDate: <span class="built_in">DateTime</span>.fromMillisecondsSinceEpoch(<span class="number">0</span>),</span><br><span class="line">                    lastDate: <span class="built_in">DateTime</span>.now().add(<span class="keyword">const</span> <span class="built_in">Duration</span>(days: <span class="number">365</span>)),</span><br><span class="line">                  );</span><br><span class="line"></span><br><span class="line">                  <span class="keyword">if</span> (date != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    TimeOfDay time = <span class="keyword">await</span> showTimePicker(</span><br><span class="line">                      context: context,</span><br><span class="line">                      initialTime: TimeOfDay.now(),</span><br><span class="line">                    );</span><br><span class="line">                    <span class="keyword">if</span> (time != <span class="keyword">null</span>) &#123;</span><br><span class="line">                      date = date.add(<span class="built_in">Duration</span>(</span><br><span class="line">                        hours: time.hour,</span><br><span class="line">                        minutes: time.minute,</span><br><span class="line">                      ));</span><br><span class="line">                      setState(() &#123;</span><br><span class="line">                        _chooseTime = date.millisecondsSinceEpoch;</span><br><span class="line">                      &#125;);</span><br><span class="line">                    &#125;</span><br><span class="line">                  &#125;</span><br><span class="line">                &#125;,</span><br><span class="line">                child: Text(</span><br><span class="line">                      () &#123;</span><br><span class="line">                    <span class="built_in">DateTime</span> dateTime =</span><br><span class="line">                    <span class="built_in">DateTime</span>.fromMillisecondsSinceEpoch(_chooseTime);</span><br><span class="line">                    <span class="keyword">return</span> <span class="string">'<span class="subst">$&#123;dateTime.year&#125;</span>/<span class="subst">$&#123;dateTime.month&#125;</span>/<span class="subst">$&#123;dateTime.day&#125;</span> <span class="subst">$&#123;dateTime.hour&#125;</span>:<span class="subst">$&#123;dateTime.minute&#125;</span>:<span class="subst">$&#123;dateTime.second&#125;</span>'</span>;</span><br><span class="line">                  &#125;(),</span><br><span class="line">                ), <span class="comment">// Text</span></span><br><span class="line">              ), <span class="comment">// InkWell</span></span><br><span class="line">              actions: [</span><br><span class="line">                FlatButton(</span><br><span class="line">                  child: Text(S.of(context).add_reminder),</span><br><span class="line">                  onPressed: () <span class="keyword">async</span> &#123;</span><br><span class="line">                    <span class="built_in">bool</span> su = <span class="keyword">await</span> Add2Calendar.addEvent2Cal(Event(</span><br><span class="line">                      title: widget.note?.title ?? <span class="string">'time note'</span>,</span><br><span class="line">                      description: widget.note?.content ?? <span class="string">'event'</span>,</span><br><span class="line">                      startDate:</span><br><span class="line">                      <span class="built_in">DateTime</span>.fromMillisecondsSinceEpoch(_chooseTime),</span><br><span class="line">                      endDate: <span class="built_in">DateTime</span>.fromMillisecondsSinceEpoch(_chooseTime)</span><br><span class="line">                          .add(<span class="keyword">const</span> <span class="built_in">Duration</span>(</span><br><span class="line">                        minutes: <span class="number">20</span>,</span><br><span class="line">                      )),</span><br><span class="line">                    ));</span><br><span class="line">                    Navigator.pop(context, <span class="keyword">true</span>);</span><br><span class="line">                  &#125;,</span><br><span class="line">                ), <span class="comment">// FlatButton</span></span><br><span class="line">                FlatButton(</span><br><span class="line">                  child: Text(S.of(context).cancel),</span><br><span class="line">                  onPressed: () &#123;</span><br><span class="line">                    Navigator.pop(context, <span class="keyword">true</span>);</span><br><span class="line">                  &#125;,</span><br><span class="line">                ), <span class="comment">// FlatButton</span></span><br><span class="line">              ],</span><br><span class="line">            ); <span class="comment">// AlertDialog</span></span><br><span class="line">          &#125;,</span><br><span class="line">        ); <span class="comment">// StatefulBuilder</span></span><br><span class="line">      &#125;,</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E5%AE%9E%E6%88%98/" rel="tag"># 实战</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/18/1592465811/" rel="next" title="LeetCode 1028. 从先序遍历还原二叉树">
+                <i class="fa fa-chevron-left"></i> LeetCode 1028. 从先序遍历还原二叉树
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="何言" />
+            
+              <p class="site-author-name" itemprop="name">何言</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#显示对话框"><span class="nav-number">1.</span> <span class="nav-text">显示对话框</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#构造对话框"><span class="nav-number">2.</span> <span class="nav-text">构造对话框</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原理"><span class="nav-number">3.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#完整代码（包括时间选择）"><span class="nav-number">4.</span> <span class="nav-text">完整代码（包括时间选择）</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">何言</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.jpg?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.jpg?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.jpg?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="异步编程,Dart," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="入坑 Flutter 后，第一个接触到的需求就需要网络请求。因为之前都是接触 Android 原生开发，所以很自然的就想到了需要多线程编程，于是学习了一下 Flutter 的异步编程。 其实说的是 Dart 的异步编程，因为 Flutter 使用的是 Dart 语言。 怎么说呢，如果之前只写过 JAVA 的多线程编程，那么可能在 Flutter 这一块就有点理解困难。当然如果你之前写过 JavaS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于 Flutter 的异步编程 1、Future 的运行规则">
+<meta property="og:url" content="http://heyanle.com/2020/06/19/1592560474/index.html">
+<meta property="og:site_name" content="何言的杂货店">
+<meta property="og:description" content="入坑 Flutter 后，第一个接触到的需求就需要网络请求。因为之前都是接触 Android 原生开发，所以很自然的就想到了需要多线程编程，于是学习了一下 Flutter 的异步编程。 其实说的是 Dart 的异步编程，因为 Flutter 使用的是 Dart 语言。 怎么说呢，如果之前只写过 JAVA 的多线程编程，那么可能在 Flutter 这一块就有点理解困难。当然如果你之前写过 JavaS">
+<meta property="og:image" content="http://heyanle.com/2020/06/19/1592560474/1.png">
+<meta property="og:image" content="http://heyanle.com/2020/06/19/1592560474/2.png">
+<meta property="og:image" content="http://heyanle.com/2020/06/19/1592560474/3.png">
+<meta property="og:image" content="http://heyanle.com/2020/06/19/1592560474/4.png">
+<meta property="og:image" content="http://heyanle.com/2020/06/19/1592560474/5.png">
+<meta property="og:image" content="http://heyanle.com/2020/06/19/1592560474/6.png">
+<meta property="og:image" content="http://heyanle.com/2020/06/19/1592560474/7.png">
+<meta property="article:published_time" content="2020-06-19T09:55:38.000Z">
+<meta property="article:modified_time" content="2020-06-19T12:18:57.740Z">
+<meta property="article:author" content="何言">
+<meta property="article:tag" content="异步编程">
+<meta property="article:tag" content="Dart">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://heyanle.com/2020/06/19/1592560474/1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://heyanle.com/2020/06/19/1592560474/"/>
+
+
+
+
+
+  <title>关于 Flutter 的异步编程 1、Future 的运行规则 | 何言的杂货店</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">何言的杂货店</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-友联">
+          <a href="/link/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heart"></i> <br />
+            
+            友联
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://heyanle.com/2020/06/19/1592560474/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="何言">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="何言的杂货店">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">关于 Flutter 的异步编程 1、Future 的运行规则</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-19T17:55:38+08:00">
+                2020-06-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Flutter/" itemprop="url" rel="index">
+                    <span itemprop="name">Flutter</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>入坑 <code>Flutter</code> 后，第一个接触到的需求就需要网络请求。因为之前都是接触 <code>Android</code> 原生开发，所以很自然的就想到了需要多线程编程，于是学习了一下 <code>Flutter</code> 的异步编程。</p>
+<p>其实说的是 <code>Dart</code> 的异步编程，因为 <code>Flutter</code> 使用的是 <code>Dart</code> 语言。</p>
+<p>怎么说呢，如果之前只写过 <code>JAVA</code> 的多线程编程，那么可能在 <code>Flutter</code> 这一块就有点理解困难。当然如果你之前写过 <code>JavaScript</code> ，那么你应该可以很快地学会  <code>Flutter</code> 的异步，因为两者差不多。直接开始吧。</p>
+<p>这是第一章，主要分析 <code>Future</code> 对象的运行规则。还有很多技巧等到下一节吧。</p>
+<h2 id="异步运行"><a href="#异步运行" class="headerlink" title="异步运行"></a>异步运行</h2><p>直接看以下代码：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">main()&#123;</span><br><span class="line"></span><br><span class="line">  Future future = Future(()&#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">'future init'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="built_in">print</span>(<span class="string">"Hello World !"</span>);</span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结果：</p>
+<img src="/2020/06/19/1592560474/1.png" class="[1.png]">
+<p>可以看到， <code>future init</code> 要比 <code>Hello World !</code> 慢输出。实际上，以上代码可以类比于 <code>Java</code> 的以下代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(string[] args)</span></span>&#123;</span><br><span class="line">    <span class="keyword">new</span> Thread(()-&gt;&#123;</span><br><span class="line">        System.out.printIn(<span class="string">"future init"</span>);</span><br><span class="line">    &#125;).start();</span><br><span class="line"></span><br><span class="line">    System.out.printIn(<span class="string">"Hello World !"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>要注意的是，这里虽然能类比，但是真实情况不太一样，<code>Java</code> 中的操作是新建了一个新的线程并和原来主线程同时运行。</p>
+<p>因为 <code>Dart</code> 是单线程模型，所以没有多线程之分。这也是我之前称这种为异步编程而不是多线程编程的原因。</p>
+<p>这种类比方式只是让你能快速理解 <code>Dart</code> 中的异步，实际上两者本质是不一样的。</p>
+<p>这里也不打算深究 <code>Future</code> 异步的实现方式，直接知道怎么用即可。</p>
+<h2 id="Future"><a href="#Future" class="headerlink" title="Future"></a>Future</h2><p><code>Future</code> 对象拥有三个常用的方法，分别是 <code>then</code> ，<code>catchError</code> 和 <code>whenComplete</code> 方法，这里分别来看。</p>
+<p>这三个方法操作后都返回 <code>future</code> 对象本身，也就是都支持链式调用，之后就不再讲这一点了。</p>
+<h3 id="then"><a href="#then" class="headerlink" title="then"></a>then</h3><p><code>then</code> 方法有两个参数，其中一个为必选一个为命名。</p>
+<p>其中必选参数为有一个参数的方法，命名参数 <code>onError</code> 我之后再讲。</p>
+<p>还是直接看以下代码吧：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">main()&#123;</span><br><span class="line"></span><br><span class="line">  Future future = Future(()&#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">'future init'</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'then 1 from init'</span>;</span><br><span class="line">  &#125;)</span><br><span class="line">  </span><br><span class="line">  .then((value)&#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">'then 1 -&gt; <span class="subst">$value</span>'</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'then 2 from then 1'</span>;</span><br><span class="line">  &#125;)</span><br><span class="line">  </span><br><span class="line">  .then((value) &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">'then 2 -&gt; <span class="subst">$value</span>'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">  <span class="built_in">print</span>(<span class="string">"Hello World !"</span>);</span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结果：</p>
+<img src="/2020/06/19/1592560474/2.png" class="[2.png]">
+<p>应该可以很容易看出来，<code>then</code> 可以说是为了代码可读性而推出的，当你调用第一个 <code>then</code> 的时候，参数的回调里的参数将是这个 <code>future</code> 对象构造参数的返回值，此后每一个 <code>then</code> 都是上一个 <code>then</code> 的返回值。同时，这一整个 <code>future</code> 有关的操作和都是异步运行的。</p>
+<h3 id="whenComplete"><a href="#whenComplete" class="headerlink" title="whenComplete"></a>whenComplete</h3><p><code>whenComplete</code> 也是很好理解，有点类似于 <code>try-catch</code> 模型中的 <code>finally</code> ，直接上代码：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">main()&#123;</span><br><span class="line"></span><br><span class="line">  Future future = Future(()&#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">'future init'</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'then 1 from init'</span>;</span><br><span class="line">  &#125;)</span><br><span class="line">  </span><br><span class="line">  .then((value)&#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">'then 1 -&gt; <span class="subst">$value</span>'</span>);</span><br><span class="line">    <span class="keyword">throw</span> NullThrownError();</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'then 2 from then 1'</span>;</span><br><span class="line">  &#125;)</span><br><span class="line">  </span><br><span class="line">  .then((value) &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">'then 2 -&gt; <span class="subst">$value</span>'</span>);</span><br><span class="line">  &#125;)</span><br><span class="line">  </span><br><span class="line">  .whenComplete(() =&gt; <span class="built_in">print</span>(<span class="string">'complete'</span>));</span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">  <span class="built_in">print</span>(<span class="string">"Hello World !"</span>);</span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结果：</p>
+<img src="/2020/06/19/1592560474/3.png" class="[3]">
+<p>我们在 第一个 <code>then</code> 后手动抛出一个异常，然后第二个 <code>then</code> 就不会被执行。也就是抛出异常的 <code>then</code> 之后的 <code>then</code> 都不会被执行，但是 <code>whenComplete</code> 无论是否抛出异常都会被执行。</p>
+<p>注意：<code>whenComplete</code> 在没抛出异常的情况下和普通的 <code>then</code> 一样，也就是说如果你在 <code>whenComplete</code> 之后调用 <code>then</code> ，这个 <code>then</code> 也会在 <code>whenComplete</code> 之后执行。</p>
+<h2 id="catchError"><a href="#catchError" class="headerlink" title="catchError"></a>catchError</h2><p><code>catchError</code> 如果之前的 <code>then</code> 发生了异常，则会调用该方法，如果没有异常则不会。</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">main()&#123;</span><br><span class="line"></span><br><span class="line">  Future future = Future(()&#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">'future init'</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'then 1 from init'</span>;</span><br><span class="line">  &#125;)</span><br><span class="line">  </span><br><span class="line">  .then((value)&#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">'then 1 -&gt; <span class="subst">$value</span>'</span>);</span><br><span class="line">    <span class="keyword">throw</span> NullThrownError();</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'then 2 from then 1'</span>;</span><br><span class="line">  &#125;)</span><br><span class="line">  </span><br><span class="line">  .then((value) &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">'then 2 -&gt; <span class="subst">$value</span>'</span>);</span><br><span class="line">  &#125;)</span><br><span class="line">  </span><br><span class="line">  .whenComplete(() =&gt; <span class="built_in">print</span>(<span class="string">'complete'</span>))</span><br><span class="line">  </span><br><span class="line">  .catchError((error)&#123;</span><br><span class="line">    <span class="built_in">print</span>(error);</span><br><span class="line">  &#125;);</span><br><span class="line">  </span><br><span class="line">  <span class="built_in">print</span>(<span class="string">"Hello World !"</span>);</span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结果：</p>
+<img src="/2020/06/19/1592560474/4.png" class="[4]">
+<p>可以看到我们之前抛出的异常被 <code>catchError</code> 捕获。如果没有异常的话，<code>catchError</code> 不会被执行。</p>
+<h2 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h2><p>当 <code>then</code> 抛出异常后，后面的所有 <code>then</code> 都不被执行。</p>
+<p>有两个方法可以处理异常</p>
+<p>1、catchError</p>
+<p>例如以下代码：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">main()&#123;</span><br><span class="line"></span><br><span class="line">  Future future = Future(()&#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">'future init'</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'then 1 from init'</span>;</span><br><span class="line">  &#125;)</span><br><span class="line">  </span><br><span class="line">  .then((value)&#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">'then 1 -&gt; <span class="subst">$value</span>'</span>);</span><br><span class="line">    <span class="keyword">throw</span> NullThrownError();</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'then 2 from then 1'</span>;</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  .then((value) &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">'then 2 -&gt; <span class="subst">$value</span>'</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'then 3 from then 2'</span>;</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  .catchError((error)&#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">'on catchError :<span class="subst">$error</span>'</span>);</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  .then((value) =&gt; <span class="built_in">print</span>(<span class="string">'then 4 -&gt; <span class="subst">$value</span>'</span>))</span><br><span class="line">  </span><br><span class="line">  .whenComplete(() =&gt; <span class="built_in">print</span>(<span class="string">'complete'</span>));</span><br><span class="line">  </span><br><span class="line">  <span class="built_in">print</span>(<span class="string">"Hello World !"</span>);</span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结果：</p>
+<img src="/2020/06/19/1592560474/5.png" class="[5]">
+<p>可以看到，我们在 <code>then1</code> 里抛出了一个异常，然后后面紧接着的 <code>then2</code> 并没有被执行，然后我们调用 <code>catchError</code> 将该异常捕获掉，这样后面的 <code>then4</code> 就可以执行了，不过因为 <code>then1</code> 的 <code>return</code> 在抛异常之后，所以这里的参数为 <code>null</code>。</p>
+<p>2、 onError</p>
+<p>还记得我们的 <code>then</code> 的第二个命名参数吗？这个命名参数的名字为 <code>onError</code> ，并且这个参数的方法模型和 <code>catchError</code> 参数的方法模型是一样的。</p>
+<p>这个参数是用来捕获上一个 <code>then</code> 产生的异常。没错上一个。</p>
+<p>观察以下代码：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">main()&#123;</span><br><span class="line"></span><br><span class="line">  Future future = Future(()&#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">'future init'</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'then 1 from init'</span>;</span><br><span class="line">  &#125;)</span><br><span class="line">  </span><br><span class="line">  .then((value)&#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">'then 1 -&gt; <span class="subst">$value</span>'</span>);</span><br><span class="line">    <span class="keyword">throw</span> NullThrownError();</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'then 2 from then 1'</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">  onError: (error)=&gt;&#123;<span class="built_in">print</span>(<span class="string">'then 1 onError -&gt; <span class="subst">$error</span>'</span>)&#125;)</span><br><span class="line"></span><br><span class="line">  .then((value) &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">'then 2 '</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'then 3 from then 2'</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">  onError: (error)&#123;<span class="built_in">print</span>(<span class="string">'then 2 onError -&gt; <span class="subst">$error</span>'</span>);&#125;)</span><br><span class="line"></span><br><span class="line">  .catchError((error)&#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">'on catchError :<span class="subst">$error</span>'</span>);</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  .then((value) =&gt; <span class="built_in">print</span>(<span class="string">'then 3 -&gt; <span class="subst">$value</span>'</span>))</span><br><span class="line">  </span><br><span class="line">  .whenComplete(() =&gt; <span class="built_in">print</span>(<span class="string">'complete'</span>));</span><br><span class="line">  </span><br><span class="line">  <span class="built_in">print</span>(<span class="string">"Hello World !"</span>);</span><br><span class="line">  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结果：</p>
+<img src="/2020/06/19/1592560474/6.png" class="[6]">
+<p>可以看到，我们在 <code>then1</code> 里也传入 <code>onError</code>，同时 <code>then1</code> 中抛出异常，但是 <code>then1</code> 的 <code>onError</code> 并没有执行，反而是 <code>then2</code> 的 <code>onError</code> 执行了。同时因为异常已经被捕获了，所以后面的 <code>catchError</code> 并没有被执行。</p>
+<p>而因为异常已经被捕获了，所以 <code>then3</code> 也成功的执行，只不过参数丢失。</p>
+<h2 id="运行规则"><a href="#运行规则" class="headerlink" title="运行规则"></a>运行规则</h2><p>同一个 <code>Future</code> 里，无论是 <code>then</code> ，<code>catchError</code> 还是 <code>whenComplete</code>，它的运行顺序都是从上到下的。并且按照以下规则：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">遇到 then ，传入上一个 then 或者构造方法的返回值</span><br><span class="line">遇到 whenComplete ，直接执行（不会等到所有 then 都执行完毕）</span><br><span class="line">遇到 catchError ， 判断之前知否有异常，有就执行并捕获，没有就不执行</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">当 then 抛出异常的时候，从下一个 then 开始，直到 then 被捕获，否则所有的 &#96;then&#96; 都不会被执行</span><br><span class="line"></span><br><span class="line">如果在 whenComplete 或者 catchError 里抛出异常，之后的处理和从 then 里抛出异常的处理方法一致</span><br><span class="line"></span><br><span class="line">捕获异常有两种方法，catchError 和 then 的命名参数 onError</span><br><span class="line"></span><br><span class="line">注：then 的命名参数 onError 是捕获之前的异常，其实相当于在 then 之后补了一个 catchError 的语法糖而已。</span><br></pre></td></tr></table></figure>
+<p>运行顺序图解：</p>
+<img src="/2020/06/19/1592560474/7.png" class="[7]">
+<p><code>model</code> 为 <code>then</code> ，<code>catchError</code> 和 <code>whenComplete</code> 三种代码块。具体规则上面有讲解。</p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>这就是 <code>Future</code> 的运行顺序相关的内容了。这是 <code>Flutter</code> 异步编程的第一个内容，其实在真正使用中还有很多其他的技巧。具体就等下一章吧。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/" rel="tag"># 异步编程</a>
+          
+            <a href="/tags/Dart/" rel="tag"># Dart</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/19/1592556998/" rel="next" title="关于 Flutter Dialog 中动态修改 Text">
+                <i class="fa fa-chevron-left"></i> 关于 Flutter Dialog 中动态修改 Text
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="何言" />
+            
+              <p class="site-author-name" itemprop="name">何言</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#异步运行"><span class="nav-number">1.</span> <span class="nav-text">异步运行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Future"><span class="nav-number">2.</span> <span class="nav-text">Future</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#then"><span class="nav-number">2.1.</span> <span class="nav-text">then</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#whenComplete"><span class="nav-number">2.2.</span> <span class="nav-text">whenComplete</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#catchError"><span class="nav-number">3.</span> <span class="nav-text">catchError</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#异常处理"><span class="nav-number">4.</span> <span class="nav-text">异常处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行规则"><span class="nav-number">5.</span> <span class="nav-text">运行规则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后记"><span class="nav-number">6.</span> <span class="nav-text">后记</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">何言</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

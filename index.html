@@ -414,10 +414,18 @@
 <p>而因为异常已经被捕获了，所以 <code>then3</code> 也成功的执行，只不过参数丢失。</p>
 <h2 id="运行规则"><a href="#运行规则" class="headerlink" title="运行规则"></a>运行规则</h2><p>同一个 <code>Future</code> 里，无论是 <code>then</code> ，<code>catchError</code> 还是 <code>whenComplete</code>，它的运行顺序都是从上到下的。并且按照以下规则：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">遇到 then ，传入上一个 then 或者构造方法的返回值</span><br><span class="line">遇到 whenComplete ，直接执行（不会等到所有 then 都执行完毕）</span><br><span class="line">遇到 catchError ， 判断之前知否有异常，有就执行并捕获，没有就不执行</span><br></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">当 then 抛出异常的时候，从下一个 then 开始，直到 then 被捕获，否则所有的 &#96;then&#96; 都不会被执行</span><br><span class="line"></span><br><span class="line">如果在 whenComplete 或者 catchError 里抛出异常，之后的处理和从 then 里抛出异常的处理方法一致</span><br><span class="line"></span><br><span class="line">捕获异常有两种方法，catchError 和 then 的命名参数 onError</span><br><span class="line"></span><br><span class="line">注：then 的命名参数 onError 是捕获之前的异常，其实相当于在 then 之后补了一个 catchError 的语法糖而已。</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">当 then 抛出异常的时候，从下一个 then 开始，直到 then 被捕获，否则所有的 &#96;then&#96; 都不会被执行</span><br><span class="line"></span><br><span class="line">如果在 whenComplete 或者 catchError 里抛出异常，之后的处理和从 then 里抛出异常的处理方法一致</span><br><span class="line"></span><br><span class="line">捕获异常有两种方法，catchError 和 then 的命名参数 onError</span><br><span class="line"></span><br><span class="line">捕获异常后，之后的 then 参数为 null</span><br><span class="line"></span><br><span class="line">注：then 的命名参数 onError 是捕获之前的异常，其实相当于在 then 之后补了一个 catchError 的语法糖而已。</span><br></pre></td></tr></table></figure>
 <p>运行顺序图解：</p>
 <img src="/2020/06/19/1592560474/7.png" class="[7]">
-<p><code>model</code> 为 <code>then</code> ，<code>catchError</code> 和 <code>whenComplete</code> 三种代码块。具体规则上面有讲解。</p>
+<p><code>model</code> 为 <code>then</code> ，<code>catchError</code> 和 <code>whenComplete</code> 三种代码块。</p>
+<p>每一个 <code>Model</code> 都会将一个参数或者是异常传给下一个 <code>Model</code>，不同 <code>Model</code> 的处理方式不一样</p>
+<p>具体规则如下：</p>
+<p>then：</p>
+<img src="/2020/06/19/1592560474/8.png" class="[8]">
+<p>whenComplete:</p>
+<img src="/2020/06/19/1592560474/9.png" class="[9]">
+<p>catchError:</p>
+<img src="/2020/06/19/1592560474/10.png" class="[10]">
 <h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>这就是 <code>Future</code> 的运行顺序相关的内容了。这是 <code>Flutter</code> 异步编程的第一个内容，其实在真正使用中还有很多其他的技巧。具体就等下一章吧。</p>
 
           
